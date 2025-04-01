@@ -5,10 +5,19 @@ import { SkillCard } from "../components/SkillCard";
 
 export function Home() {
   const [newSkill, setNewSkill] = useState("");
-  const [skills, setSkills] = useState<string[]>([]);
+  const [skills, setSkills] = useState<{ id: string; name: string }[]>([]);
 
   function handleAddNewSkill() {
-    setSkills([...skills, newSkill]);
+    const data = {
+      id: String(new Date().getTime()),
+      name: newSkill,
+    };
+
+    setSkills([...skills, data]);
+  }
+
+  function handleRemoveSkill(id: string) {
+    setSkills(skills.filter((skill) => skill.id !== id));
   }
 
   return (
@@ -28,8 +37,10 @@ export function Home() {
 
       <FlatList
         data={skills}
-        keyExtractor={(item) => item}
-        renderItem={({ item }) => <SkillCard skill={item} onPress={() => {}} />}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <SkillCard skill={item} onPress={() => handleRemoveSkill(item.id)} />
+        )}
       />
     </View>
   );
